@@ -1,0 +1,26 @@
+{
+    "development": {
+        "username": "easemedic",
+        "password": "39DjhLmgPr",
+        "database": "postgres",
+        "host": "localhost",
+        "port": "5433",
+        "dialect": "postgres"
+    },
+    "test": {
+        "username": "easemedic",
+        "password": "39DjhLmgPr",
+        "database": "postgres",
+        "host": "localhost",
+        "port": "5433",
+        "dialect": "postgres"
+    },
+    "production": {
+        "username": "easemedic",
+        "password": "39DjhLmgPr",
+        "database": "postgres",
+        "host": "localhost",
+        "port": "5433",
+        "dialect": "postgres"
+    }
+}

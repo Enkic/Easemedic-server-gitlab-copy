@@ -1,0 +1,612 @@
+{
+    "openapi": "3.0.2",
+    "info": {
+        "title": "EaseMedic Server API",
+        "description": "### Back-end server used to store user profiles, upload their medical prescriptions and a lot of stuff.\n\n# Introduction\nThis API is documented in **OpenAPI format** and is based on\n[Petstore sample](http://petstore.swagger.io/) provided by [swagger.io](http://swagger.io) team.\nIt was **extended** to illustrate features of [generator-openapi-repo](https://github.com/Rebilly/generator-openapi-repo)\ntool and [ReDoc](https://github.com/Redocly/redoc) documentation. In addition to standard\nOpenAPI syntax we use a few [vendor extensions](https://github.com/Redocly/redoc/blob/master/docs/redoc-vendor-extensions.md).\n\n# Authentication\n\nEaseMedic Server offers two forms of authentication:\n  - [Basic access authentication](https://tools.ietf.org/html/rfc7617)\n is a method for an HTTP user agent (e.g. a web browser) to provide a user name and password when making a request. In basic HTTP authentication, a request contains a header field in the form of Authorization: Basic <credentials>, where credentials is the base64 encoding of id and password joined by a single colon :.\n<SecurityDefinitions />\n- [Bearer Token authentication] JSON Web Token is an Internet standard for creating data with optional signature and/or optional encryption whose payload holds JSON that asserts some number of claims. The tokens are signed either using a private secret or a public/private key. ",
+        "version": "0.0.0"
+    },
+    "security": [
+        {
+            "Bearer Token": []
+        }
+    ],
+    "tags": [
+        {
+            "name": "User management",
+            "description": "API to manage user account on EaseMedic server."
+        },
+        {
+            "name": "Prescription",
+            "description": "API to manage prescription on EaseMedic server."
+        }
+    ],
+    "paths": {
+        "/user/signup": {
+            "post": {
+                "tags": ["User management"],
+                "summary": "Signup a new user",
+                "description": "The server will decompose Authorization header to extract email and password.",
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/UserBasic"
+                },
+                "responses": {
+                    "201": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Invalid form : email formating or password length less than 6"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "409": {
+                        "description": "This user already exists : email address conflict"
+                    }
+                }
+            }
+        },
+        "/user/socialSecurityNumber": {
+            "post": {
+                "tags": ["User management"],
+                "summary": "Add the social security number to the user account",
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/SocialSecurityNumber"
+                },
+                "responses": {
+                    "201": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Social security number is missing or invalid"
+                    }
+                }
+            }
+        },
+        "/user/phoneNumber": {
+            "post": {
+                "tags": ["User management"],
+                "summary": "Add the phone number to the user account",
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/PhoneNumber"
+                },
+                "responses": {
+                    "201": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Phone number is missing or invalid"
+                    }
+                }
+            }
+        },
+        "/user/addMutual": {
+            "post": {
+                "tags": ["User management"],
+                "summary": "Add the mutual informations to the user account",
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/Mutual"
+                },
+                "responses": {
+                    "201": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "mutualAmc is missing or invalid"
+                    },
+                    "400": {
+                        "description": "mutualMembershipNumber is missing or invalid"
+                    },
+                    "400": {
+                        "description": "mutualPh2 number is missing or invalid"
+                    },
+                    "400": {
+                        "description": "mutualPh4 number is missing or invalid"
+                    },
+                    "400": {
+                        "description": "mutualPh7 number is missing or invalid"
+                    },
+                    "400": {
+                        "description": "mutualExpirationDate is missing or invalid"
+                    }
+                }
+            }
+        },
+        "/user/preferedPharmacy": {
+            "post": {
+                "tags": ["User management"],
+                "summary": "Add the mutual informations to the user account",
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/PreferedPharmacy"
+                },
+                "responses": {
+                    "201": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "preferedPharmacyAddr is missing"
+                    }
+                }
+            }
+        },
+        "/user/me": {
+            "get": {
+                "tags": ["User management"],
+                "summary": "Get user profile",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserBasic"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "403": {
+                        "description": "Email or password does not match, or the account with this email does not exist"
+                    }
+                }
+            },
+            "put": {
+                "tags": ["User management"],
+                "summary": "Modify user profile",
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/User"
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Invalid form : email formating or password length less than 6"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "404": {
+                        "description": "User indentify by email don't exist"
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["User management"],
+                "summary": "Delete user profile",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "403": {
+                        "description": "Email or password does not match, or the account with this email does not exist"
+                    }
+                }
+            }
+        },
+        "/prescription": {
+            "post": {
+                "tags": ["Prescription"],
+                "summary": "Upload a prescription",
+                "responses": {
+                    "201": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Prescription"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "A property is missing"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "403": {
+                        "description": "Email or password does not match, or the account with this email does not exist"
+                    }
+                }
+            }
+        },
+        "/prescription/{id}": {
+            "delete": {
+                "tags": ["Prescription"],
+                "summary": "Delete a prescription",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "Id refers to a prescription, is obtained when uploading, must be strictly positive",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "`id` is missing"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "403": {
+                        "description": "Email or password does not match, or the account with this email does not exist"
+                    }
+                }
+            }
+        },
+        "/pharmacies": {
+            "get": {
+                "tags": ["Pharmacies"],
+                "summary": "Get pharmacies around me",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "range",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "required": true,
+                        "description": "The range within you want to find pharmacies (in meters)"
+                    },
+                    {
+                        "in": "query",
+                        "name": "longitude",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "required": true,
+                        "description": "The user's latitude"
+                    },
+                    {
+                        "in": "query",
+                        "name": "latitude",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "required": true,
+                        "description": "The user's longitude"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "'range', 'latitude' or longitude is missing"
+                    },
+                    "500": {
+                        "description": "internal error: no pharmacies available')"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Mutual": {
+                "type": "object",
+                "properties": {
+                    "mutualAmc": {
+                        "type": "integer",
+                        "description": "Mutual amc number",
+                        "example": "12345678"
+                    },
+                    "mutualMembershipNumber": {
+                        "type": "integer",
+                        "description": "Mutual membership number",
+                        "example": "12345678"
+                    },
+                    "mutualPh2": {
+                        "type": "integer",
+                        "description": "Mutual ph2",
+                        "example": "100"
+                    },
+                    "mutualPh4": {
+                        "type": "integer",
+                        "description": "Mutual ph4",
+                        "example": "100"
+                    },
+                    "mutualPh7": {
+                        "type": "integer",
+                        "description": "Mutual ph7",
+                        "example": "100"
+                    },
+                    "mutualExpirationDate": {
+                        "type": "integer",
+                        "description": "Mutual expiration date",
+                        "example": "16/03/2021"
+                    }
+                }
+            },
+            "UserBasic": {
+                "type": "object",
+                "properties": {
+                    "firstName": {
+                        "type": "string",
+                        "description": "User first name",
+                        "example": "Vincent"
+                    },
+                    "lastName": {
+                        "type": "string",
+                        "description": "User last name",
+                        "example": "Moscato"
+                    },
+                    "email": {
+                        "type": "string",
+                        "description": "User email address",
+                        "example": "vincent.moscato@rmc.fr"
+                    },
+                    "type": {
+                        "type": "integer",
+                        "enum": [0, 1, 2, 3, 4],
+                        "description": "Account type :\n  * `0` - A pharmacist\n  * `1` - A company\n  * `2` - An employee \n  * `3` - A nurse\n  * `4` - A private\n",
+                        "example": 4
+                    }
+                }
+            },
+            "User": {
+                "type": "object",
+                "properties": {
+                    "firstName": {
+                        "type": "string",
+                        "description": "User first name",
+                        "example": "Vincent"
+                    },
+                    "lastName": {
+                        "type": "string",
+                        "description": "User last name",
+                        "example": "Moscato"
+                    },
+                    "email": {
+                        "type": "string",
+                        "description": "User email address",
+                        "example": "vincent.moscato@rmc.fr"
+                    },
+                    "type": {
+                        "type": "integer",
+                        "enum": [0, 1, 2, 3, 4],
+                        "description": "Account type :\n  * `0` - A pharmacist\n  * `1` - A company\n  * `2` - An employee \n  * `3` - A nurse\n  * `4` - A private\n",
+                        "example": 4
+                    },
+                    "socialSecurityNumber": {
+                        "type": "integer",
+                        "description": "Sociale security number",
+                        "example": "12345678"
+                    },
+                    "phoneNumber": {
+                        "type": "integer",
+                        "description": "User's phone number",
+                        "example": "0212345678"
+                    },
+                    "preferedPharmacyAddr": {
+                        "type": "integer",
+                        "description": "User email address",
+                        "example": "32 AVENUE DE LA PHARMASISILAFAMILLE"
+                    },
+                    "preferedPharmacyName": {
+                        "type": "integer",
+                        "description": "Prefered pharmacy name",
+                        "example": "PHARMASISILAFAMILLE"
+                    },
+                    "mutualAmc": {
+                        "type": "integer",
+                        "description": "Mutual amc number",
+                        "example": "12345678"
+                    },
+                    "mutualMembershipNumber": {
+                        "type": "integer",
+                        "description": "Mutual membership number",
+                        "example": "12345678"
+                    },
+                    "mutualPh2": {
+                        "type": "integer",
+                        "description": "Mutual ph2",
+                        "example": "100"
+                    },
+                    "mutualPh4": {
+                        "type": "integer",
+                        "description": "Mutual ph4",
+                        "example": "100"
+                    },
+                    "mutualPh7": {
+                        "type": "integer",
+                        "description": "Mutual ph7",
+                        "example": "100"
+                    },
+                    "mutualExpirationDate": {
+                        "type": "integer",
+                        "description": "Mutual expiration date",
+                        "example": "16/03/2021"
+                    }
+                }
+            },
+            "Prescription": {
+                "type": "object",
+                "properties": {
+                    "doctorName": {
+                        "type": "string",
+                        "description": "Doctor name",
+                        "example": "Michel Cymes"
+                    },
+                    "date": {
+                        "type": "string",
+                        "description": "Prescription date",
+                        "example": "2020-01-01T21:42:21.420Z"
+                    },
+                    "drugs": {
+                        "type": "array",
+                        "description": "Drugs list",
+                        "items": {
+                            "$ref": "#/components/schemas/Drug"
+                        }
+                    }
+                }
+            },
+            "Drug": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "Drug name",
+                        "example": "Padamalgam 1g"
+                    },
+                    "count": {
+                        "type": "number",
+                        "description": "Number of drugs prescribed",
+                        "example": "20"
+                    }
+                }
+            },
+            "PhoneNumber": {
+                "type": "object",
+                "properties": {
+                    "phoneNumber": {
+                        "type": "integer",
+                        "description": "Phone number of the user",
+                        "example": "0212345678"
+                    }
+                }
+            },
+            "SocialSecurityNumber": {
+                "type": "object",
+                "properties": {
+                    "socialSecurityNumber": {
+                        "type": "integer",
+                        "description": "Social security number of the user",
+                        "example": "12345678"
+                    }
+                }
+            },
+            "PreferedPharmacy": {
+                "type": "object",
+                "properties": {
+                    "socialSecurityNumber": {
+                        "type": "string",
+                        "description": "Prefered pharmacie of the user",
+                        "example": "32 RUE DE LA PHARMASISILAFAMILLE"
+                    }
+                }
+            }
+        },
+        "requestBodies": {
+            "Mutual": {
+                "description": "Mutual model",
+                "required": false,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/Mutual"
+                        }
+                    }
+                }
+            },
+            "User": {
+                "description": "User model",
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/User"
+                        }
+                    }
+                }
+            },
+            "UserBasic": {
+                "description": "User model without optional values",
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/UserBasic"
+                        }
+                    }
+                }
+            },
+            "Prescription": {
+                "description": "Prescription model",
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/User"
+                        }
+                    }
+                }
+            },
+            "SocialSecurityNumber": {
+                "description": "User model without optional values",
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/SocialSecurityNumber"
+                        }
+                    }
+                }
+            },
+            "PhoneNumber": {
+                "description": "User model without optional values",
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/PhoneNumber"
+                        }
+                    }
+                }
+            },
+            "PreferedPharmacy": {
+                "description": "User model without optional values",
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/PreferedPharmacy"
+                        }
+                    }
+                }
+            }
+        },
+        "responses": {
+            "UnauthorizedError": {
+                "description": "Authentication information is missing or invalid",
+                "headers": {
+                    "WWW-Authenticate": {
+                        "description": "Authorization header : Basic",
+                        "style": "simple",
+                        "explode": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "WWW-Authenticate: Basic realm=EaseMedic-Server"
+                        }
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "BasicAuth": {
+                "type": "http",
+                "scheme": "basic",
+                "description": "The client sends HTTP requests with the Authorization header that contains the word Basic word followed by a space and a base64-encoded string email:password."
+            },
+            "JWTAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "description": "The client sends HTTP requests with the Authorization header that contains the access token wich was provided by the server during signin."
+            }
+        }
+    }
+}

@@ -1,0 +1,23 @@
+version: '3'
+services:
+    server:
+        image: registry.gitlab.com/easemedic/easemedic-server/easemedic-server:latest
+        build:
+            context: ./server
+            dockerfile: ./Dockerfile.prod
+        environment:
+            - NODE_ENV=prod
+            - DB_HOST=db
+            - DB_PORT=5432
+        ports:
+            - 8080:8080
+        depends_on:
+            - db
+        restart: always
+    db:
+        image: postgres
+        env_file:
+            - ./.env
+        volumes:
+            - /home/antoinetermet/easemedic-data:/var/lib/postgres/data
+        restart: always

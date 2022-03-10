@@ -1,0 +1,12 @@
+{
+    "name": "easemedic-api",
+    "version": "0.0.0",
+    "description": "OpenAPI 3.0.2 specification of EaseMedic API",
+    "main": "index.js",
+    "scripts": {},
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "redoc-cli": "^0.9.5"
+    }
+}

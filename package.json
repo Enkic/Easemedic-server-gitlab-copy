@@ -1,0 +1,48 @@
+{
+    "name": "easemedic-server",
+    "version": "0.0.0",
+    "repository": {
+        "type": "git",
+        "url": "git@gitlab.com:easemedic/easemedic-server.git"
+    },
+    "scripts": {
+        "commit": "git-cz",
+        "prettify": "prettier --config .prettierrc --write '{*.json,server/**/*.{js,ts,scss,css,html,json}}'",
+        "release": "standard-version && git push --follow-tags"
+    },
+    "private": true,
+    "devDependencies": {
+        "@types/express-prometheus-middleware": "^1.2.1",
+        "commitizen": "^3.0.0",
+        "husky": "^7.0.4",
+        "lint-staged": "^10.5.4",
+        "nodemon": "^2.0.14",
+        "prettier": "^2.4.1",
+        "standard-version": "^9.3.2"
+    },
+    "lint-staged": {
+        "{*.json,server/**/*.{js,ts,scss,css,html,json}}": [
+            "prettier --config .prettierrc --write"
+        ]
+    },
+    "config": {
+        "commitizen": {
+            "path": "./node_modules/cz-conventional-changelog"
+        }
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "lint-staged"
+        }
+    },
+    "dependencies": {
+        "express-prom-bundle": "^6.4.1",
+        "express-prometheus-middleware": "^1.2.0",
+        "express-status-monitor": "^1.2.3",
+        "multer": "^1.4.2",
+        "node-gyp": "^8.4.0",
+        "pm2": "^5.1.2",
+        "prom-client": "^14.0.1",
+        "prometheus": "^0.1.7"
+    }
+}

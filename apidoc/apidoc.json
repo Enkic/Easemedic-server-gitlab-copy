@@ -1,0 +1,8 @@
+{
+    "name": "easemedic-server",
+    "version": "0.0.0",
+    "description": "Documentation for the server easemedic created by apidoc",
+    "title": "easemedic server",
+    "url": "https://apiprod.easemedic.fr",
+    "sampleUrl": "https://apiprod.easemedic.fr"
+}

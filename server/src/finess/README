@@ -1,0 +1,15 @@
+ infos dans le JSON
+ 
+1    "rs"               --> Nom court
+2    "rslongue"         --> Nom long
+3    "numvoie"          --> Numéro de voie
+4    "typvoie"          --> Type de voie    
+5    "voie"
+6    "compvoie"
+7    "lieuditbp"
+8    "commune"
+9    "departement"
+10    "libdepartement"
+11    "telephone"
+12    "coordxet"
+13    "coordyet"
